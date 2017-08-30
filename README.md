@@ -1,0 +1,1 @@
+This extension measures Liferay's page load time both in SPA mode and with classic navigations.

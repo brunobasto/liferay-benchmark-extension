@@ -1,0 +1,54 @@
+ <!DOCTYPE html>
+<style> 
+    body {
+        font-family: Tahoma, sans-serif;
+        font-size: 10pt;
+    }
+    #container {
+        width: 301px;
+    }
+    span {
+        width: 58px;
+        display: inline-block;       
+        border-left: 1px solid #888;
+        text-align: right;
+    }
+    .lbl {
+        width: 100px;
+        text-align: left;
+        padding-left: 4px;
+    }
+    .sub {
+        text-indent: 10px;
+    }
+    .row, #header {
+        border: 1px solid #888;
+        border-width: 0 1px 1px 0;
+    }
+    #header {
+        border-top-width: 1px;
+    }
+    #header span {
+        text-align: center;
+    }
+    .row {
+        background-image: -webkit-gradient(linear, left bottom, left top,
+            color-stop(0.49, #a9d0e3), color-stop(0.75, #c3e0ee));
+        background-repeat: no-repeat;
+    }
+    
+</style>
+<h3>Load Data</h3>
+<div id="container">
+    <div id="header">
+        <span class="lbl">Measurement</span>
+        <span>Count</span>
+        <span>Time to Parse All</span>
+    </div>
+    <div class="row">
+        <span class="lbl">Parsed Scripts</span>
+        <span id="scriptsCount"></span>
+        <span id="scriptsTime"></span>
+    </div>
+</div>
+<script src="popup.js"></script>

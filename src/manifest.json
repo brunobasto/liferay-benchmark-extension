@@ -1,0 +1,33 @@
+{
+  "name": "Liferay Load Timer",
+  "externally_connectable": {
+    "ids": ["*"]
+  },
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "This extension measures Liferay's page load time both in SPA mode and with classic navigations.",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_icon": "liferay22.png",
+    "default_popup": "info.html"
+  },
+  "content_scripts": [{
+    "run_at": "document_end",
+    "matches": ["*://*/*"],
+    "js": ["injected.js"]
+  }],
+  "permissions": [
+    "http://*/*",
+    "tabs",
+    "storage",
+    "webNavigation"
+  ],
+  "icons": {
+    "16": "liferay16.png",
+    "48": "liferay48.png",
+    "128": "liferay128.png"
+  }
+}
