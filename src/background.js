@@ -13,6 +13,7 @@ function messageHandler(payload, sender, sendResponse) {
     }
     sendResponse();
 }
+
 chrome.runtime.onMessage.addListener(messageHandler);
 chrome.runtime.onMessageExternal.addListener(messageHandler);
 
