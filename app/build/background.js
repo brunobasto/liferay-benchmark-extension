@@ -60,61 +60,70 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 119);
+/******/ 	return __webpack_require__(__webpack_require__.s = 120);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 119:
+/***/ 120:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var toSeconds = function toSeconds(ms) {
-	return String((ms / 1000).toPrecision(3)).substring(0, 4);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Average = function Average(measurements) {
+	_classCallCheck(this, Average);
+
+	if (measurements.length > 0) {
+		this.duration = measurements.reduce(function (sum, m) {
+			return sum + m.duration;
+		}, 0) / measurements.length;
+	} else {
+		this.duration = 0;
+	}
+	this.count = measurements.length;
 };
 
 function messageHandler(payload, sender, sendResponse) {
+	// Do not track measurments for empty new tab
+	if (sender.tab.url.indexOf('chrome://') === 0) {
+		return;
+	}
 	if (payload.type === 'UPDATE_DURATION') {
+		var toSeconds = function toSeconds(ms) {
+			return String((ms / 1000).toPrecision(3)).substring(0, 4);
+		};
 		chrome.browserAction.setBadgeText({ text: toSeconds(payload.duration), tabId: sender.tab.id });
 	}
 	if (payload.type === 'UPDATE_MEASUREMENTS') {
 		chrome.storage.local.get('cache', function (data) {
-			if (!data.cache) data.cache = {};
-			var measurementsData = data.cache['tab' + sender.tab.id];
-			if (!measurementsData) {
-				measurementsData = [];
+			if (!data.cache) {
+				data.cache = {};
 			}
-			measurementsData.push(payload.measurements);
+			var measurementsHistory = data.cache['tab' + sender.tab.id];
+			if (!measurementsHistory) {
+				measurementsHistory = [];
+			}
+			var measurements = payload.measurements;
+			measurementsHistory.push(measurements);
 			// Senna average data
-			var sennaMeasurements = measurementsData.filter(function (m) {
+			var sennaAverage = new Average(measurementsHistory.filter(function (m) {
 				return m.spa === true;
-			});
-			if (sennaMeasurements.length > 0) {
-				payload.measurements.averageSennaDuration = sennaMeasurements.reduce(function (sum, m) {
-					return sum + m.duration;
-				}, 0) / sennaMeasurements.length;
-			} else {
-				payload.measurements.averageSennaDuration = 0;
-			}
-			payload.measurements.sennaNavigationCount = sennaMeasurements.length;
+			}));
+			measurements.sennaDurationAverage = sennaAverage.duration;
+			measurements.sennaNavigationCount = sennaAverage.count;
 			// Regular navigation average data
-			var regularMeasurements = measurementsData.filter(function (m) {
+			var regularAverage = new Average(measurementsHistory.filter(function (m) {
 				return m.spa === false;
-			});
-			if (regularMeasurements.length > 0) {
-				payload.measurements.averageRegularDuration = regularMeasurements.reduce(function (sum, m) {
-					return sum + m.duration;
-				}, 0) / regularMeasurements.length;
-			} else {
-				payload.measurements.averageRegularDuration = 0;
-			}
-			payload.measurements.regularNavigationCount = regularMeasurements.length;
+			}));
+			measurements.regularDurationAverage = regularAverage.duration;
+			measurements.regularNavigationCount = regularAverage.count;
 			// Persist data
-			data.cache['tab' + sender.tab.id] = measurementsData;
+			data.cache['tab' + sender.tab.id] = measurementsHistory;
 			chrome.storage.local.set(data);
-			sendResponse(payload.measurements);
+			sendResponse(measurements);
 		});
 		return true;
 	}

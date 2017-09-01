@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 120);
+/******/ 	return __webpack_require__(__webpack_require__.s = 121);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -15650,15 +15650,15 @@ var Template = function () {
 	_createClass(Template, null, [{
 		key: 'getMeasurementsTable',
 		value: function getMeasurementsTable(context) {
-			var style = 'min-width: 400px;margin: 5px;';
+			var style = 'width: 450px;margin: 5px;';
 			if (context.displayInside) {
-				style += 'z-index:999999999999;position:fixed;top:70px;right:10px;';
+				style += 'z-index:999999999999;position:fixed;bottom:0px;right:calc(50% - 450px);';
 			}
 			var alertClass = 'alert-info';
 			if (context.spa) {
 				alertClass = 'alert-success';
 			}
-			return '\n\t\t<div class="panel panel-primary" style="' + style + '">\n\t\t\t<div class="panel-heading">\n\t\t\t\t<h3 class="panel-title">Liferay Benchmark</h3>\n\t\t\t</div>\n\t\t\t<div class="alert ' + alertClass + '" role="alert" style="margin: 5px;">\n\t\t\t\tPage loaded in <strong>' + formatDuration(context.duration) + '</strong>' + (context.spa ? ' with Senna.js <img src="https://sennajs.com/images/logo.png" style="width: 40px;position: absolute;right: 10px;top: 3px;"/>' : '') + ('</div>\n\t\t\t<table class="table table-striped">\n\t\t\t\t<thead class="thead-inverse">\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<th>Measurement</th>\n\t\t\t\t\t\t<th>Count</th>\n\t\t\t\t\t\t<th>Time</th>\n\t\t\t\t\t</tr>\n\t\t\t\t</thead>\n\t\t\t\t<tbody>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Loaded <span class="badge badge-info">&lt;script/&gt;</span> tags</td>\n\t\t\t\t\t\t<td text-align="center">' + context.scriptsCount + '</td>\n\t\t\t\t\t\t<td>' + formatDuration(context.scriptsTime) + '</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Loaded <span class="badge badge-info">&lt;link/&gt;</span> tags</td>\n\t\t\t\t\t\t<td text-align="center">' + context.linksCount + '</td>\n\t\t\t\t\t\t<td>' + formatDuration(context.linksTime) + '</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Average load time with Senna.js</td>\n\t\t\t\t\t\t<td text-align="center">' + context.sennaNavigationCount + '</td>\n\t\t\t\t\t\t<td>' + formatDuration(context.averageSennaDuration) + '</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Average load time without Senna.js</td>\n\t\t\t\t\t\t<td text-align="center">' + context.regularNavigationCount + '</td>\n\t\t\t\t\t\t<td>' + formatDuration(context.averageRegularDuration) + '</td>\n\t\t\t\t\t</tr>\n\t\t\t\t</tbody>\n\t\t\t</table>\n\t\t</div>');
+			return '\n\t\t<div class="panel panel-primary" style="' + style + '">\n\t\t\t<div class="panel-heading">\n\t\t\t\t<h3 class="panel-title">Liferay Benchmark</h3>\n\t\t\t</div>\n\t\t\t<div class="alert ' + alertClass + '" role="alert" style="margin: 5px;">\n\t\t\t\tPage loaded in <strong>' + formatDuration(context.duration) + '</strong>' + (context.spa ? ' with <img src="https://sennajs.com/images/logo.png" style="width: 40px;position: absolute;right: 10px;top: 3px;"/>' : ' without ') + '<strong>Senna.js</strong>' + ('</div>\n\t\t\t<table class="table table-striped">\n\t\t\t\t<thead class="thead-inverse">\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<th>Measurement</th>\n\t\t\t\t\t\t<th style="text-align:center;">Count</th>\n\t\t\t\t\t\t<th style="text-align:center;">Time</th>\n\t\t\t\t\t</tr>\n\t\t\t\t</thead>\n\t\t\t\t<tbody>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Loaded <span class="badge badge-info" style="font-size: 12px;font-family: Monospace;padding: 5px;">&lt;script/&gt;</span> tags</td>\n\t\t\t\t\t\t<td style="text-align:center;">' + context.scriptsCount + '</td>\n\t\t\t\t\t\t<td style="text-align:center;"> - </td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Loaded <span class="badge badge-info" style="font-size: 12px;font-family: Monospace;padding: 5px;">&lt;link/&gt;</span> tags</td>\n\t\t\t\t\t\t<td style="text-align:center;">' + context.linksCount + '</td>\n\t\t\t\t\t\t<td style="text-align:center;"> - </td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Average load time with Senna.js</td>\n\t\t\t\t\t\t<td style="text-align:center;">' + context.sennaNavigationCount + '</td>\n\t\t\t\t\t\t<td style="text-align:center;">' + formatDuration(context.sennaDurationAverage) + '</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Average load time without Senna.js</td>\n\t\t\t\t\t\t<td style="text-align:center;">' + context.regularNavigationCount + '</td>\n\t\t\t\t\t\t<td style="text-align:center;">' + formatDuration(context.regularDurationAverage) + '</td>\n\t\t\t\t\t</tr>\n\t\t\t\t</tbody>\n\t\t\t</table>\n\t\t</div>');
 		}
 	}]);
 
@@ -15949,13 +15949,14 @@ webpackContext.id = 118;
 
 /***/ }),
 /* 119 */,
-/* 120 */
+/* 120 */,
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _inject = __webpack_require__(121);
+var _inject = __webpack_require__(122);
 
 var _inject2 = _interopRequireDefault(_inject);
 
@@ -15969,8 +15970,9 @@ window.addEventListener('message', function (event) {
 	if (event.source !== window) {
 		return;
 	}
+	var callback = void 0;
 	if (event.data.type === 'UPDATE_MEASUREMENTS') {
-		chrome.runtime.sendMessage(event.data, function (measurements) {
+		callback = function callback(measurements) {
 			var tableElement = document.querySelector('#liferayBenchmarkTable');
 			if (!tableElement) {
 				tableElement = document.createElement('div');
@@ -15979,8 +15981,9 @@ window.addEventListener('message', function (event) {
 			}
 			measurements.displayInside = true;
 			tableElement.innerHTML = _template2.default.getMeasurementsTable(measurements);
-		});
+		};
 	}
+	chrome.runtime.sendMessage(event.data, callback);
 });
 
 function handleOnLoad() {
@@ -15998,7 +16001,7 @@ if (document.readyState === 'complete') {
 }
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16031,16 +16034,15 @@ exports.default = function () {
 
 		var scripts = getPerformanceEntries('script');
 		var links = getPerformanceEntries('link');
-		var measurements = {
-			duration: duration,
-			spa: spa,
-			scriptsCount: scripts.length,
-			scriptsTime: getPerformanceTime(scripts),
-			linksCount: links.length,
-			linksTime: getPerformanceTime(links)
-		};
 		postMessage({
-			measurements: measurements,
+			measurements: {
+				duration: duration,
+				linksCount: links.length,
+				linksTime: getPerformanceTime(links),
+				scriptsCount: scripts.length,
+				scriptsTime: getPerformanceTime(scripts),
+				spa: spa
+			},
 			type: 'UPDATE_MEASUREMENTS'
 		}, domain);
 	};
