@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 121);
+/******/ 	return __webpack_require__(__webpack_require__.s = 120);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -15949,14 +15949,13 @@ webpackContext.id = 118;
 
 /***/ }),
 /* 119 */,
-/* 120 */,
-/* 121 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _inject = __webpack_require__(122);
+var _inject = __webpack_require__(121);
 
 var _inject2 = _interopRequireDefault(_inject);
 
@@ -15975,6 +15974,7 @@ window.addEventListener('message', function (event) {
 			var tableElement = document.querySelector('#liferayBenchmarkTable');
 			if (!tableElement) {
 				tableElement = document.createElement('div');
+				tableElement.id = 'liferayBenchmarkTable';
 				document.body.appendChild(tableElement);
 			}
 			measurements.displayInside = true;
@@ -15998,7 +15998,7 @@ if (document.readyState === 'complete') {
 }
 
 /***/ }),
-/* 122 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

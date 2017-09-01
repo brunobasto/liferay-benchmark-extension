@@ -10,6 +10,7 @@ window.addEventListener('message', (event) => {
 			let tableElement = document.querySelector('#liferayBenchmarkTable');
 			if (!tableElement) {
 				tableElement = document.createElement('div');
+				tableElement.id = 'liferayBenchmarkTable';
 				document.body.appendChild(tableElement);
 			}
 			measurements.displayInside = true;
