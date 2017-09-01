@@ -5,8 +5,9 @@ window.addEventListener('message', (event) => {
 	if (event.source !== window) {
 		return;
 	}
+	let callback;
 	if (event.data.type === 'UPDATE_MEASUREMENTS') {
-		chrome.runtime.sendMessage(event.data, function(measurements) {
+		callback = function(measurements) {
 			let tableElement = document.querySelector('#liferayBenchmarkTable');
 			if (!tableElement) {
 				tableElement = document.createElement('div');
@@ -15,8 +16,9 @@ window.addEventListener('message', (event) => {
 			}
 			measurements.displayInside = true;
 			tableElement.innerHTML = Template.getMeasurementsTable(measurements);
-		});
+		}
 	}
+	chrome.runtime.sendMessage(event.data, callback);
 });
 
 function handleOnLoad() {

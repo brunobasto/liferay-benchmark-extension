@@ -1,39 +1,47 @@
-const toSeconds = (ms) => String((ms / 1000).toPrecision(3)).substring(0, 4);
+class Average {
+	constructor(measurements) {
+		if (measurements.length > 0) {
+			this.duration = measurements.reduce((sum, m) => sum + m.duration, 0) / measurements.length;
+		}
+		else {
+			this.duration = 0;
+		}
+		this.count = measurements.length;
+	}
+}
 
 function messageHandler(payload, sender, sendResponse) {
+	// Do not track measurments for empty new tab
+	if (sender.tab.url.indexOf('chrome://') === 0) {
+		return;
+	}
 	if (payload.type === 'UPDATE_DURATION') {
+		const toSeconds = (ms) => String((ms / 1000).toPrecision(3)).substring(0, 4);
 		chrome.browserAction.setBadgeText({text: toSeconds(payload.duration), tabId: sender.tab.id});
 	}
 	if (payload.type === 'UPDATE_MEASUREMENTS') {
-		chrome.storage.local.get('cache', function(data) {
-			if (!data.cache) data.cache = {};
-			let measurementsData = data.cache['tab' + sender.tab.id];
-			if (!measurementsData) {
-				measurementsData = [];
+		chrome.storage.local.get('cache', (data) => {
+			if (!data.cache) {
+				data.cache = {};
 			}
-			measurementsData.push(payload.measurements);
+			let measurementsHistory = data.cache['tab' + sender.tab.id];
+			if (!measurementsHistory) {
+				measurementsHistory = [];
+			}
+			const measurements = payload.measurements;
+			measurementsHistory.push(measurements);
 			// Senna average data
-			const sennaMeasurements = measurementsData.filter(m => m.spa === true);
-			if (sennaMeasurements.length > 0) {
-				payload.measurements.averageSennaDuration = sennaMeasurements.reduce((sum, m) => sum + m.duration, 0) / sennaMeasurements.length;
-			}
-			else {
-				payload.measurements.averageSennaDuration = 0;
-			}
-			payload.measurements.sennaNavigationCount = sennaMeasurements.length;
+			const sennaAverage = new Average(measurementsHistory.filter(m => m.spa === true));
+			measurements.sennaDurationAverage = sennaAverage.duration;
+			measurements.sennaNavigationCount = sennaAverage.count;
 			// Regular navigation average data
-			const regularMeasurements = measurementsData.filter(m => m.spa === false);
-			if (regularMeasurements.length > 0) {
-				payload.measurements.averageRegularDuration = regularMeasurements.reduce((sum, m) => sum + m.duration, 0) / regularMeasurements.length;
-			}
-			else {
-				payload.measurements.averageRegularDuration = 0;
-			}
-			payload.measurements.regularNavigationCount = regularMeasurements.length;
+			const regularAverage = new Average(measurementsHistory.filter(m => m.spa === false));
+			measurements.regularDurationAverage = regularAverage.duration;
+			measurements.regularNavigationCount = regularAverage.count;
 			// Persist data
-			data.cache['tab' + sender.tab.id] = measurementsData;
+			data.cache['tab' + sender.tab.id] = measurementsHistory;
 			chrome.storage.local.set(data);
-			sendResponse(payload.measurements);
+			sendResponse(measurements);
 		});
 		return true;
 	}

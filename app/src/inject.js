@@ -11,16 +11,15 @@ export default () => {
 	const postMeasurements = (duration, spa = false) => {
 		const scripts = getPerformanceEntries('script');
 		const links = getPerformanceEntries('link');
-		const measurements = {
-			duration,
-			spa,
-			scriptsCount: scripts.length,
-			scriptsTime: getPerformanceTime(scripts),
-			linksCount: links.length,
-			linksTime: getPerformanceTime(links)
-		};
 		postMessage({
-			measurements,
+			measurements: {
+				duration,
+				linksCount: links.length,
+				linksTime: getPerformanceTime(links),
+				scriptsCount: scripts.length,
+				scriptsTime: getPerformanceTime(scripts),
+				spa
+			},
 			type: 'UPDATE_MEASUREMENTS'
 		}, domain);
 	};
