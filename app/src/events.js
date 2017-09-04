@@ -18,6 +18,19 @@ class Events {
 		});
 	}
 
+	static onClickClearData(event) {
+		chrome.tabs.getSelected(null, (tab) => {
+			const tabId = tab.id;
+			DataBase.clearHistory(tabId).then(() => {
+				chrome.tabs.sendMessage(tabId, {
+					type: 'RENDER_MEASUREMENTS',
+					tabId,
+					measurements: []
+				});
+			});
+		});
+	}
+
 	static onChangeSendUsageData(event) {
 		const input = event.target;
 		const checked = input.checked;

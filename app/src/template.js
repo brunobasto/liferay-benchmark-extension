@@ -39,6 +39,9 @@ class Template {
 							<span class="toggle-switch-text toggle-switch-text-right">Send anonymous usage data (<strong>for Liferay websites only</strong>)</span>
 						</label>
 					</div>
+					<div class="form-group">
+						<a class="btn btn-link" href="#" id="lfrBenchmarkClearData">Clear measurements history</a>
+					</div>
 				</div>
 			</div>
 		`;

@@ -33,6 +33,17 @@ class DataBase {
 		});
 	}
 
+	static clearHistory(tabId) {
+		return new Promise((resolve) => {
+			DataBase.getTabData(tabId).then((tabData) => {
+				chrome.storage.local.get('cache', (data) => {
+					data.cache[`tab${tabId}`].measurements = [];
+					chrome.storage.local.set(data, () => resolve(data));
+				});
+			});
+		});
+	}
+
 	static saveMeasurements(tabId, measurements) {
 		DataBase.getSetting(tabId, 'sendUsageData', true).then((sendUsageData) => {
 			if (sendUsageData) {

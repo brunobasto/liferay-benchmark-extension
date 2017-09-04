@@ -132,6 +132,20 @@ var DataBase = function () {
 			});
 		}
 	}, {
+		key: 'clearHistory',
+		value: function clearHistory(tabId) {
+			return new Promise(function (resolve) {
+				DataBase.getTabData(tabId).then(function (tabData) {
+					chrome.storage.local.get('cache', function (data) {
+						data.cache['tab' + tabId].measurements = [];
+						chrome.storage.local.set(data, function () {
+							return resolve(data);
+						});
+					});
+				});
+			});
+		}
+	}, {
 		key: 'saveMeasurements',
 		value: function saveMeasurements(tabId, measurements) {
 			DataBase.getSetting(tabId, 'sendUsageData', true).then(function (sendUsageData) {

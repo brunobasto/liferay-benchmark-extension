@@ -4601,6 +4601,20 @@ var DataBase = function () {
 			});
 		}
 	}, {
+		key: 'clearHistory',
+		value: function clearHistory(tabId) {
+			return new Promise(function (resolve) {
+				DataBase.getTabData(tabId).then(function (tabData) {
+					chrome.storage.local.get('cache', function (data) {
+						data.cache['tab' + tabId].measurements = [];
+						chrome.storage.local.set(data, function () {
+							return resolve(data);
+						});
+					});
+				});
+			});
+		}
+	}, {
 		key: 'saveMeasurements',
 		value: function saveMeasurements(tabId, measurements) {
 			DataBase.getSetting(tabId, 'sendUsageData', true).then(function (sendUsageData) {
@@ -15816,6 +15830,20 @@ var Events = function () {
 			});
 		}
 	}, {
+		key: 'onClickClearData',
+		value: function onClickClearData(event) {
+			chrome.tabs.getSelected(null, function (tab) {
+				var tabId = tab.id;
+				_database2.default.clearHistory(tabId).then(function () {
+					chrome.tabs.sendMessage(tabId, {
+						type: 'RENDER_MEASUREMENTS',
+						tabId: tabId,
+						measurements: []
+					});
+				});
+			});
+		}
+	}, {
 		key: 'onChangeSendUsageData',
 		value: function onChangeSendUsageData(event) {
 			var input = event.target;
@@ -15879,7 +15907,7 @@ var Template = function () {
 		value: function getConfigurationsTemplate(context) {
 			var displayInsideChecked = context.displayInside ? 'checked' : '';
 			var sendUsageDataChecked = context.sendUsageData ? 'checked' : '';
-			return '\n\t\t\t<div class="panel panel-default" style="width: 450px;margin: 5px;">\n\t\t\t\t<div class="panel-heading">\n\t\t\t\t\t<h3 class="panel-title">Settings</h3>\n\t\t\t\t</div>\n\t\t\t\t<div class="panel-body">\n\t\t\t\t\t<div class="form-group">\n\t\t\t\t\t\t<label aria-checked="false" for="lfrBenchmarkDisplayInside" role="checkbox">\n\t\t\t\t\t\t\t<input ' + displayInsideChecked + ' class="toggle-switch" id="lfrBenchmarkDisplayInside" name="lfrBenchmarkDisplayInside" type="checkbox" value="true" />\n\t\t\t\t\t\t\t<span aria-hidden="true" class="toggle-switch-bar">\n\t\t\t\t\t\t\t\t<span class="toggle-switch-handle"></span>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t<span class="toggle-switch-text toggle-switch-text-right">Display measurements inside page</span>\n\t\t\t\t\t\t</label>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="form-group">\n\t\t\t\t\t\t<label aria-checked="false" for="lfrBenchmarkSendUsageData" role="checkbox">\n\t\t\t\t\t\t\t<input ' + sendUsageDataChecked + ' class="toggle-switch" id="lfrBenchmarkSendUsageData" name="lfrBenchmarkSendUsageData" type="checkbox" value="true" />\n\t\t\t\t\t\t\t<span aria-hidden="true" class="toggle-switch-bar">\n\t\t\t\t\t\t\t\t<span class="toggle-switch-handle"></span>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t<span class="toggle-switch-text toggle-switch-text-right">Send anonymous usage data (<strong>for Liferay websites only</strong>)</span>\n\t\t\t\t\t\t</label>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t';
+			return '\n\t\t\t<div class="panel panel-default" style="width: 450px;margin: 5px;">\n\t\t\t\t<div class="panel-heading">\n\t\t\t\t\t<h3 class="panel-title">Settings</h3>\n\t\t\t\t</div>\n\t\t\t\t<div class="panel-body">\n\t\t\t\t\t<div class="form-group">\n\t\t\t\t\t\t<label aria-checked="false" for="lfrBenchmarkDisplayInside" role="checkbox">\n\t\t\t\t\t\t\t<input ' + displayInsideChecked + ' class="toggle-switch" id="lfrBenchmarkDisplayInside" name="lfrBenchmarkDisplayInside" type="checkbox" value="true" />\n\t\t\t\t\t\t\t<span aria-hidden="true" class="toggle-switch-bar">\n\t\t\t\t\t\t\t\t<span class="toggle-switch-handle"></span>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t<span class="toggle-switch-text toggle-switch-text-right">Display measurements inside page</span>\n\t\t\t\t\t\t</label>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="form-group">\n\t\t\t\t\t\t<label aria-checked="false" for="lfrBenchmarkSendUsageData" role="checkbox">\n\t\t\t\t\t\t\t<input ' + sendUsageDataChecked + ' class="toggle-switch" id="lfrBenchmarkSendUsageData" name="lfrBenchmarkSendUsageData" type="checkbox" value="true" />\n\t\t\t\t\t\t\t<span aria-hidden="true" class="toggle-switch-bar">\n\t\t\t\t\t\t\t\t<span class="toggle-switch-handle"></span>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t<span class="toggle-switch-text toggle-switch-text-right">Send anonymous usage data (<strong>for Liferay websites only</strong>)</span>\n\t\t\t\t\t\t</label>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="form-group">\n\t\t\t\t\t\t<a class="btn btn-link" href="#" id="lfrBenchmarkClearData">Clear measurements history</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t';
 		}
 	}, {
 		key: 'getMeasurementsTable',
