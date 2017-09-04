@@ -1,5 +1,5 @@
 {
-  "name": "Liferay Load Timer",
+  "name": "Liferay Benchmark Extension",
   "externally_connectable": {
     "ids": ["*"]
   },
@@ -7,7 +7,7 @@
   "manifest_version": 2,
   "description": "This extension measures Liferay's page load time both in SPA mode and with classic navigations.",
   "background": {
-    "scripts": ["src/background.js"],
+    "scripts": ["build/background.js"],
     "persistent": false
   },
   "browser_action": {

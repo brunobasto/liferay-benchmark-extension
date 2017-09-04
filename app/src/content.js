@@ -1,24 +1,41 @@
+import DataBase from './database';
 import injectedScript from './inject';
 import Template from './template';
 
-window.addEventListener('message', (event) => {
-	if (event.source !== window) {
-		return;
-	}
-	let callback;
-	if (event.data.type === 'UPDATE_MEASUREMENTS') {
-		callback = function(measurements) {
-			let tableElement = document.querySelector('#liferayBenchmarkTable');
+const renderMeasurements = (measurements, tabId) => {
+	DataBase.getSetting(tabId, 'displayInside').then((displayInside) => {
+		let tableElement = document.querySelector('#liferayBenchmarkTable');
+		if (displayInside) {
 			if (!tableElement) {
 				tableElement = document.createElement('div');
 				tableElement.id = 'liferayBenchmarkTable';
 				document.body.appendChild(tableElement);
 			}
-			measurements.displayInside = true;
-			tableElement.innerHTML = Template.getMeasurementsTable(measurements);
+			tableElement.innerHTML = Template.getMeasurementsTable({
+				displayInside,
+				history: measurements
+			});
 		}
+		else if (tableElement) {
+			tableElement.parentNode.removeChild(tableElement);
+		}
+	});
+};
+
+window.addEventListener('message', (event) => {
+	if (event.source !== window || !event.data) {
+		return;
 	}
-	chrome.runtime.sendMessage(event.data, callback);
+	// Only tracks Liferay pages
+	if (!event.data.liferay) {
+		console.log('not a liferay page', event.data);
+		return;
+	}
+	let cb;
+	if (event.data.type === 'UPDATE_MEASUREMENTS') {
+		cb = response => renderMeasurements(response.measurements, response.tabId);
+	}
+	chrome.runtime.sendMessage(event.data, cb);
 });
 
 function handleOnLoad() {
@@ -33,3 +50,9 @@ if (document.readyState === 'complete') {
 else {
 	window.addEventListener('load', () => handleOnLoad());
 }
+
+chrome.runtime.onMessage.addListener((payload, sender, sendResponse) => {
+	if (payload.type === 'RENDER_MEASUREMENTS') {
+		renderMeasurements(payload.measurements, payload.tabId);
+	}
+});

@@ -5,20 +5,25 @@ export default () => {
 	const postDuration = (duration) => {
 		postMessage({
 			duration: duration,
+			liferay: window.Liferay !== undefined,
 			type: 'UPDATE_DURATION'
 		}, domain);
 	};
 	const postMeasurements = (duration, spa = false) => {
 		const scripts = getPerformanceEntries('script');
 		const links = getPerformanceEntries('link');
+		const isLiferay = window.Liferay !== undefined;
 		postMessage({
+			liferay: isLiferay,
 			measurements: {
 				duration,
+				liferay: isLiferay,
 				linksCount: links.length,
 				linksTime: getPerformanceTime(links),
 				scriptsCount: scripts.length,
 				scriptsTime: getPerformanceTime(scripts),
-				spa
+				spa,
+				url: location.href
 			},
 			type: 'UPDATE_MEASUREMENTS'
 		}, domain);
@@ -37,7 +42,7 @@ export default () => {
 			performance.clearMarks();
 	  		performance.clearMeasures();
 			// Update detailed measurements
-			setTimeout(() => postMeasurements(duration, true), 500);
+			setTimeout(() => postMeasurements(duration, true), 250);
 		});
 	}
 	setTimeout(() => {
